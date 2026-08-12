@@ -1,0 +1,47 @@
+{
+  "title": "Papria local Wi-Fi upload contract",
+  "version": "v1",
+  "security": {
+    "authorization": "Bearer upload-session-token",
+    "resumeAuthorization": "X-Papria-Resume-Token",
+    "tokenInQrFragment": true,
+    "foregroundOnly": true,
+    "localInterfaceOnly": true
+  },
+  "chunkSizeBytes": 8388608,
+  "routes": {
+    "index": {"method": "GET", "path": "/"},
+    "create": {
+      "method": "POST",
+      "path": "/api/uploads",
+      "body": ["fileName", "sizeBytes"],
+      "response": ["uploadId", "resumeToken", "receivedBytes"]
+    },
+    "status": {
+      "method": "GET",
+      "path": "/api/uploads/:uploadId",
+      "header": "X-Papria-Resume-Token"
+    },
+    "chunk": {
+      "method": "PUT",
+      "path": "/api/uploads/:uploadId/chunks/:chunkIndex",
+      "header": ["Content-Range", "X-Papria-Resume-Token"]
+    },
+    "complete": {
+      "method": "POST",
+      "path": "/api/uploads/:uploadId/complete",
+      "header": "X-Papria-Resume-Token"
+    },
+    "cancel": {
+      "method": "DELETE",
+      "path": "/api/uploads/:uploadId",
+      "header": "X-Papria-Resume-Token"
+    }
+  },
+  "storage": {
+    "destination": "local-only",
+    "hash": "sha256",
+    "temporarySuffix": ".part",
+    "unfinishedRetentionHours": 24
+  }
+}

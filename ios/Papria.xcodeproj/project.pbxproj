@@ -1,0 +1,938 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* PapriaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* PapriaApp.swift */; };
+		A10000000000000000000002 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* AppEnvironment.swift */; };
+		A10000000000000000000003 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* RootView.swift */; };
+		A10000000000000000000004 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* APIClient.swift */; };
+		A10000000000000000000005 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* Auth.swift */; };
+		A10000000000000000000006 /* KeychainTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* KeychainTokenStore.swift */; };
+		A10000000000000000000007 /* DraftStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* DraftStore.swift */; };
+		A10000000000000000000008 /* PushAndDeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* PushAndDeepLink.swift */; };
+		A10000000000000000000009 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* Navigation.swift */; };
+		A10000000000000000000010 /* PapriaDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* PapriaDesign.swift */; };
+		A10000000000000000000011 /* AuthenticationFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* AuthenticationFeature.swift */; };
+		A10000000000000000000012 /* StudentFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000012 /* StudentFeature.swift */; };
+		A10000000000000000000013 /* ParentFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000013 /* ParentFeature.swift */; };
+		A10000000000000000000014 /* NotificationFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000014 /* NotificationFeature.swift */; };
+		A10000000000000000000015 /* SettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000015 /* SettingsFeature.swift */; };
+		A10000000000000000000016 /* ContractModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016 /* ContractModels.swift */; };
+		A10000000000000000000017 /* PapriaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* PapriaTests.swift */; };
+		A10000000000000000000018 /* PapriaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000018 /* PapriaUITests.swift */; };
+		A10000000000000000000019 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000019 /* XCTest.framework */; };
+		A10000000000000000000020 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000019 /* XCTest.framework */; };
+		A10000000000000000000021 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000023 /* Assets.xcassets */; };
+		A10000000000000000000022 /* PapriaLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000024 /* PapriaLocalization.swift */; };
+		A10000000000000000000025 /* TransferFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000025 /* TransferFeature.swift */; };
+		A10000000000000000000026 /* ReaderFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000026 /* ReaderFeature.swift */; };
+		A10000000000000000000027 /* SQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000027 /* SQLiteStore.swift */; };
+		A10000000000000000000028 /* ProgressSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000028 /* ProgressSync.swift */; };
+		A10000000000000000000029 /* LocalTransferReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000029 /* LocalTransferReceiver.swift */; };
+		A10000000000000000000030 /* AudioPlaybackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000030 /* AudioPlaybackService.swift */; };
+		A10000000000000000000031 /* ZipArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000031 /* ZipArchive.swift */; };
+		A10000000000000000000032 /* FormatCoreRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000032 /* FormatCoreRuntime.swift */; };
+		A10000000000000000000033 /* FormatCoreNativeBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000033 /* FormatCoreNativeBridge.swift */; };
+		A10000000000000000000034 /* AudioFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000034 /* AudioFallback.swift */; };
+		B10000000000000000000001 /* ReadiumReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* ReadiumReaderView.swift */; };
+		B10000000000000000000002 /* ReadiumShared in Frameworks */ = {isa = PBXBuildFile; productRef = B40000000000000000000001 /* ReadiumShared */; };
+		B10000000000000000000003 /* ReadiumStreamer in Frameworks */ = {isa = PBXBuildFile; productRef = B40000000000000000000002 /* ReadiumStreamer */; };
+		B10000000000000000000004 /* ReadiumNavigator in Frameworks */ = {isa = PBXBuildFile; productRef = B40000000000000000000003 /* ReadiumNavigator */; };
+		B10000000000000000000005 /* ReadiumAdapterGCDWebServer in Frameworks */ = {isa = PBXBuildFile; productRef = B40000000000000000000004 /* ReadiumAdapterGCDWebServer */; };
+		C10000000000000000000001 /* PapriaFormatCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20000000000000000000001 /* PapriaFormatCore.xcframework */; };
+		D10000000000000000000001 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* MobileVLCKit.xcframework */; };
+		D10000000000000000000002 /* MobileVLCAudioFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000002 /* MobileVLCAudioFallback.swift */; };
+		D10000000000000000000003 /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E10000000000000000000001 /* BookOrbitCodableBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000001 /* BookOrbitCodableBoundaryTests.swift */; };
+		E10000000000000000000002 /* TransportAndTransferBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000002 /* TransportAndTransferBoundaryTests.swift */; };
+		E10000000000000000000003 /* AudioFallbackCapabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000003 /* AudioFallbackCapabilityTests.swift */; };
+		E10000000000000000000004 /* ReaderAndPDFBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000004 /* ReaderAndPDFBoundaryTests.swift */; };
+		E10000000000000000000005 /* SQLiteProfileProgressBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000005 /* SQLiteProfileProgressBoundaryTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A50000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A60000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A70000000000000000000001;
+			remoteInfo = Papria;
+		};
+		A50000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A60000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A70000000000000000000001;
+			remoteInfo = Papria;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D70000000000000000000001 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D10000000000000000000003 /* MobileVLCKit.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A20000000000000000000001 /* PapriaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PapriaApp.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		A20000000000000000000003 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		A20000000000000000000004 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		A20000000000000000000005 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
+		A20000000000000000000006 /* KeychainTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStore.swift; sourceTree = "<group>"; };
+		A20000000000000000000007 /* DraftStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraftStore.swift; sourceTree = "<group>"; };
+		A20000000000000000000008 /* PushAndDeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushAndDeepLink.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
+		A20000000000000000000010 /* PapriaDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PapriaDesign.swift; sourceTree = "<group>"; };
+		A20000000000000000000011 /* AuthenticationFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFeature.swift; sourceTree = "<group>"; };
+		A20000000000000000000012 /* StudentFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentFeature.swift; sourceTree = "<group>"; };
+		A20000000000000000000013 /* ParentFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentFeature.swift; sourceTree = "<group>"; };
+		A20000000000000000000014 /* NotificationFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationFeature.swift; sourceTree = "<group>"; };
+		A20000000000000000000015 /* SettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFeature.swift; sourceTree = "<group>"; };
+		A20000000000000000000016 /* ContractModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractModels.swift; sourceTree = "<group>"; };
+		A20000000000000000000017 /* PapriaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PapriaTests.swift; sourceTree = "<group>"; };
+		A20000000000000000000018 /* PapriaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PapriaUITests.swift; sourceTree = "<group>"; };
+		A20000000000000000000019 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
+		A20000000000000000000020 /* Papria.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Papria.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000021 /* PapriaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PapriaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000022 /* PapriaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PapriaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000023 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A20000000000000000000024 /* PapriaLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PapriaLocalization.swift; sourceTree = "<group>"; };
+		A20000000000000000000025 /* TransferFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferFeature.swift; sourceTree = "<group>"; };
+		A20000000000000000000026 /* ReaderFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderFeature.swift; sourceTree = "<group>"; };
+		A20000000000000000000027 /* SQLiteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteStore.swift; sourceTree = "<group>"; };
+		A20000000000000000000028 /* ProgressSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSync.swift; sourceTree = "<group>"; };
+		A20000000000000000000029 /* LocalTransferReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTransferReceiver.swift; sourceTree = "<group>"; };
+		A20000000000000000000030 /* AudioPlaybackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackService.swift; sourceTree = "<group>"; };
+		A20000000000000000000031 /* ZipArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZipArchive.swift; sourceTree = "<group>"; };
+		A20000000000000000000032 /* FormatCoreRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatCoreRuntime.swift; sourceTree = "<group>"; };
+		A20000000000000000000033 /* FormatCoreNativeBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatCoreNativeBridge.swift; sourceTree = "<group>"; };
+		A20000000000000000000034 /* AudioFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFallback.swift; sourceTree = "<group>"; };
+		B20000000000000000000001 /* ReadiumReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadiumReaderView.swift; sourceTree = "<group>"; };
+		C20000000000000000000001 /* PapriaFormatCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PapriaFormatCore.xcframework; path = "../shared/format-core/artifacts/PapriaFormatCore.xcframework"; sourceTree = SOURCE_ROOT; };
+		D20000000000000000000001 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = ThirdParty/Build/MobileVLCKit.xcframework; sourceTree = SOURCE_ROOT; };
+		D20000000000000000000002 /* MobileVLCAudioFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileVLCAudioFallback.swift; sourceTree = "<group>"; };
+		E20000000000000000000001 /* BookOrbitCodableBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookOrbitCodableBoundaryTests.swift; sourceTree = "<group>"; };
+		E20000000000000000000002 /* TransportAndTransferBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportAndTransferBoundaryTests.swift; sourceTree = "<group>"; };
+		E20000000000000000000003 /* AudioFallbackCapabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFallbackCapabilityTests.swift; sourceTree = "<group>"; };
+		E20000000000000000000004 /* ReaderAndPDFBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderAndPDFBoundaryTests.swift; sourceTree = "<group>"; };
+		E20000000000000000000005 /* SQLiteProfileProgressBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteProfileProgressBoundaryTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A80000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000002 /* ReadiumShared in Frameworks */,
+				B10000000000000000000003 /* ReadiumStreamer in Frameworks */,
+				B10000000000000000000004 /* ReadiumNavigator in Frameworks */,
+				B10000000000000000000005 /* ReadiumAdapterGCDWebServer in Frameworks */,
+				C10000000000000000000001 /* PapriaFormatCore.xcframework in Frameworks */,
+				D10000000000000000000001 /* MobileVLCKit.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A80000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000019 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A80000000000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000020 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A90000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A90000000000000000000002 /* Papria */,
+				A90000000000000000000003 /* PapriaTests */,
+				A90000000000000000000004 /* PapriaUITests */,
+				A90000000000000000000005 /* Frameworks */,
+				A90000000000000000000006 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A90000000000000000000002 /* Papria */ = {
+			isa = PBXGroup;
+			children = (
+				A90000000000000000000007 /* App */,
+				A90000000000000000000008 /* Core */,
+				A90000000000000000000009 /* DesignSystem */,
+				A90000000000000000000010 /* Features */,
+				A90000000000000000000011 /* GeneratedAPI */,
+				A90000000000000000000012 /* Resources */,
+			);
+			path = Papria;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000003 /* PapriaTests */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000017 /* PapriaTests.swift */,
+				E20000000000000000000001 /* BookOrbitCodableBoundaryTests.swift */,
+				E20000000000000000000002 /* TransportAndTransferBoundaryTests.swift */,
+				E20000000000000000000003 /* AudioFallbackCapabilityTests.swift */,
+				E20000000000000000000004 /* ReaderAndPDFBoundaryTests.swift */,
+				E20000000000000000000005 /* SQLiteProfileProgressBoundaryTests.swift */,
+			);
+			path = PapriaTests;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000004 /* PapriaUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000018 /* PapriaUITests.swift */,
+			);
+			path = PapriaUITests;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000005 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000019 /* XCTest.framework */,
+				C20000000000000000000001 /* PapriaFormatCore.xcframework */,
+				D20000000000000000000001 /* MobileVLCKit.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000006 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000020 /* Papria.app */,
+				A20000000000000000000021 /* PapriaTests.xctest */,
+				A20000000000000000000022 /* PapriaUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000007 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000001 /* PapriaApp.swift */,
+				A20000000000000000000002 /* AppEnvironment.swift */,
+				A20000000000000000000003 /* RootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000008 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A90000000000000000000013 /* API */,
+				A90000000000000000000014 /* Auth */,
+				A90000000000000000000015 /* Persistence */,
+				A90000000000000000000016 /* Push */,
+				A90000000000000000000017 /* Routing */,
+				A90000000000000000000018 /* Security */,
+				A90000000000000000000027 /* TransferCore */,
+				A90000000000000000000028 /* AudioCore */,
+				A90000000000000000000029 /* ReaderCore */,
+				A90000000000000000000024 /* Localization */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000009 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000010 /* PapriaDesign.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000010 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				A90000000000000000000019 /* Authentication */,
+				A90000000000000000000020 /* Student */,
+				A90000000000000000000021 /* Parent */,
+				A90000000000000000000022 /* Notifications */,
+				A90000000000000000000023 /* Settings */,
+				A90000000000000000000025 /* Reader */,
+				A90000000000000000000026 /* Transfer */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000011 /* GeneratedAPI */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000016 /* ContractModels.swift */,
+			);
+			path = GeneratedAPI;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000012 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000023 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000013 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000004 /* APIClient.swift */,
+				A20000000000000000000028 /* ProgressSync.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000014 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000005 /* Auth.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000015 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000007 /* DraftStore.swift */,
+				A20000000000000000000027 /* SQLiteStore.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000016 /* Push */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000008 /* PushAndDeepLink.swift */,
+			);
+			path = Push;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000017 /* Routing */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000009 /* Navigation.swift */,
+			);
+			path = Routing;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000018 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000006 /* KeychainTokenStore.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000019 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000011 /* AuthenticationFeature.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000020 /* Student */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000012 /* StudentFeature.swift */,
+			);
+			path = Student;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000021 /* Parent */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000013 /* ParentFeature.swift */,
+			);
+			path = Parent;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000022 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000014 /* NotificationFeature.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000023 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000015 /* SettingsFeature.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000024 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000024 /* PapriaLocalization.swift */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000025 /* Reader */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000026 /* ReaderFeature.swift */,
+			);
+			path = Reader;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000026 /* Transfer */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000025 /* TransferFeature.swift */,
+			);
+			path = Transfer;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000027 /* TransferCore */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000029 /* LocalTransferReceiver.swift */,
+			);
+			name = TransferCore;
+			path = Transfer;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000028 /* AudioCore */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000030 /* AudioPlaybackService.swift */,
+				A20000000000000000000034 /* AudioFallback.swift */,
+				D20000000000000000000002 /* MobileVLCAudioFallback.swift */,
+			);
+			name = AudioCore;
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		A90000000000000000000029 /* ReaderCore */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000031 /* ZipArchive.swift */,
+				A20000000000000000000032 /* FormatCoreRuntime.swift */,
+				A20000000000000000000033 /* FormatCoreNativeBridge.swift */,
+				B20000000000000000000001 /* ReadiumReaderView.swift */,
+			);
+			name = ReaderCore;
+			path = Reader;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A70000000000000000000001 /* Papria */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB00000000000000000000001 /* Build configuration list for PBXNativeTarget "Papria" */;
+			buildPhases = (
+				D80000000000000000000001 /* Verify MobileVLCKit */,
+				C80000000000000000000001 /* Build Papria Format Core */,
+				A80000000000000000000001 /* Frameworks */,
+				AC00000000000000000000001 /* Sources */,
+				D70000000000000000000001 /* Embed Frameworks */,
+				AF00000000000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Papria;
+			packageProductDependencies = (
+				B40000000000000000000001 /* ReadiumShared */,
+				B40000000000000000000002 /* ReadiumStreamer */,
+				B40000000000000000000003 /* ReadiumNavigator */,
+				B40000000000000000000004 /* ReadiumAdapterGCDWebServer */,
+			);
+			productName = Papria;
+			productReference = A20000000000000000000020 /* Papria.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A70000000000000000000002 /* PapriaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB00000000000000000000002 /* Build configuration list for PBXNativeTarget "PapriaTests" */;
+			buildPhases = (
+				A80000000000000000000002 /* Frameworks */,
+				AC00000000000000000000002 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AD00000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = PapriaTests;
+			productName = PapriaTests;
+			productReference = A20000000000000000000021 /* PapriaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A70000000000000000000003 /* PapriaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB00000000000000000000003 /* Build configuration list for PBXNativeTarget "PapriaUITests" */;
+			buildPhases = (
+				A80000000000000000000003 /* Frameworks */,
+				AC00000000000000000000003 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AD00000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = PapriaUITests;
+			productName = PapriaUITests;
+			productReference = A20000000000000000000022 /* PapriaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A60000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A70000000000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					A70000000000000000000002 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = A70000000000000000000001;
+					};
+					A70000000000000000000003 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = A70000000000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = AB00000000000000000000000 /* Build configuration list for PBXProject "Papria" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				"zh-Hans",
+				Base,
+			);
+			mainGroup = A90000000000000000000001;
+			packageReferences = (
+				B30000000000000000000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */,
+			);
+			productRefGroup = A90000000000000000000006 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A70000000000000000000001 /* Papria */,
+				A70000000000000000000002 /* PapriaTests */,
+				A70000000000000000000003 /* PapriaUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AF00000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000021 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C80000000000000000000001 /* Build Papria Format Core */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Build Papria Format Core";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -euo pipefail\n\"$SRCROOT/../scripts/build-format-core.sh\" ios\n";
+		};
+		D80000000000000000000001 /* Verify MobileVLCKit */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Verify MobileVLCKit";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -euo pipefail\nFRAMEWORK=\"$SRCROOT/ThirdParty/Build/MobileVLCKit.xcframework\"\nif [[ ! -f \"$FRAMEWORK/Info.plist\" ]]; then\n  echo \"Missing MobileVLCKit. Run: bash ios/scripts/fetch_mobilevlckit.sh\" >&2\n  exit 1\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AC00000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* PapriaApp.swift in Sources */,
+				A10000000000000000000002 /* AppEnvironment.swift in Sources */,
+				A10000000000000000000003 /* RootView.swift in Sources */,
+				A10000000000000000000004 /* APIClient.swift in Sources */,
+				A10000000000000000000005 /* Auth.swift in Sources */,
+				A10000000000000000000006 /* KeychainTokenStore.swift in Sources */,
+				A10000000000000000000007 /* DraftStore.swift in Sources */,
+				A10000000000000000000008 /* PushAndDeepLink.swift in Sources */,
+				A10000000000000000000009 /* Navigation.swift in Sources */,
+				A10000000000000000000010 /* PapriaDesign.swift in Sources */,
+				A10000000000000000000011 /* AuthenticationFeature.swift in Sources */,
+				A10000000000000000000012 /* StudentFeature.swift in Sources */,
+				A10000000000000000000013 /* ParentFeature.swift in Sources */,
+				A10000000000000000000014 /* NotificationFeature.swift in Sources */,
+				A10000000000000000000015 /* SettingsFeature.swift in Sources */,
+				A10000000000000000000016 /* ContractModels.swift in Sources */,
+				A10000000000000000000022 /* PapriaLocalization.swift in Sources */,
+				A10000000000000000000025 /* TransferFeature.swift in Sources */,
+				A10000000000000000000026 /* ReaderFeature.swift in Sources */,
+				A10000000000000000000027 /* SQLiteStore.swift in Sources */,
+				A10000000000000000000028 /* ProgressSync.swift in Sources */,
+				A10000000000000000000029 /* LocalTransferReceiver.swift in Sources */,
+				A10000000000000000000030 /* AudioPlaybackService.swift in Sources */,
+				A10000000000000000000031 /* ZipArchive.swift in Sources */,
+				A10000000000000000000032 /* FormatCoreRuntime.swift in Sources */,
+				A10000000000000000000033 /* FormatCoreNativeBridge.swift in Sources */,
+				A10000000000000000000034 /* AudioFallback.swift in Sources */,
+				B10000000000000000000001 /* ReadiumReaderView.swift in Sources */,
+				D10000000000000000000002 /* MobileVLCAudioFallback.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC00000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000017 /* PapriaTests.swift in Sources */,
+				E10000000000000000000001 /* BookOrbitCodableBoundaryTests.swift in Sources */,
+				E10000000000000000000002 /* TransportAndTransferBoundaryTests.swift in Sources */,
+				E10000000000000000000003 /* AudioFallbackCapabilityTests.swift in Sources */,
+				E10000000000000000000004 /* ReaderAndPDFBoundaryTests.swift in Sources */,
+				E10000000000000000000005 /* SQLiteProfileProgressBoundaryTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC00000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000018 /* PapriaUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AD00000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A70000000000000000000001 /* Papria */;
+			targetProxy = A50000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		AD00000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A70000000000000000000001 /* Papria */;
+			targetProxy = A50000000000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AE00000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		AE00000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		AE00000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Papria/Papria.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CCPR3KM686;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/ThirdParty/Build",
+				);
+				INFOPLIST_FILE = Papria/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = (
+					"-larchive",
+					"-lc++",
+					"-lxml2",
+					"-lz",
+					"-lbz2",
+					"-liconv",
+					"-framework",
+					QuartzCore,
+					"-framework",
+					CoreText,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					Security,
+					"-framework",
+					CFNetwork,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					VideoToolbox,
+					"-framework",
+					CoreMedia,
+				);
+				PAPRIA_API_BASE_URL = "https://staging-api.example.invalid/api/v1/";
+				PAPRIA_ASSOCIATED_DOMAIN = REPLACE_WITH_PRODUCTION_DOMAIN;
+				PRODUCT_BUNDLE_IDENTIFIER = nz.papria.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AE00000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Papria/Papria.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CCPR3KM686;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/ThirdParty/Build",
+				);
+				INFOPLIST_FILE = Papria/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = (
+					"-larchive",
+					"-lc++",
+					"-lxml2",
+					"-lz",
+					"-lbz2",
+					"-liconv",
+					"-framework",
+					QuartzCore,
+					"-framework",
+					CoreText,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					Security,
+					"-framework",
+					CFNetwork,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					VideoToolbox,
+					"-framework",
+					CoreMedia,
+				);
+				PAPRIA_API_BASE_URL = "https://api.example.invalid/api/v1/";
+				PAPRIA_ASSOCIATED_DOMAIN = REPLACE_WITH_PRODUCTION_DOMAIN;
+				PRODUCT_BUNDLE_IDENTIFIER = nz.papria.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AE00000000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nz.papria.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Papria.app/Papria";
+			};
+			name = Debug;
+		};
+		AE00000000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nz.papria.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Papria.app/Papria";
+			};
+			name = Release;
+		};
+		AE00000000000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nz.papria.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Papria;
+			};
+			name = Debug;
+		};
+		AE00000000000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nz.papria.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Papria;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AB00000000000000000000000 /* Build configuration list for PBXProject "Papria" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE00000000000000000000001 /* Debug */,
+				AE00000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB00000000000000000000001 /* Build configuration list for PBXNativeTarget "Papria" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE00000000000000000000003 /* Debug */,
+				AE00000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB00000000000000000000002 /* Build configuration list for PBXNativeTarget "PapriaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE00000000000000000000005 /* Debug */,
+				AE00000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB00000000000000000000003 /* Build configuration list for PBXNativeTarget "PapriaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE00000000000000000000007 /* Debug */,
+				AE00000000000000000000008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B30000000000000000000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/readium/swift-toolkit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 3.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B40000000000000000000001 /* ReadiumShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B30000000000000000000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */;
+			productName = ReadiumShared;
+		};
+		B40000000000000000000002 /* ReadiumStreamer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B30000000000000000000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */;
+			productName = ReadiumStreamer;
+		};
+		B40000000000000000000003 /* ReadiumNavigator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B30000000000000000000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */;
+			productName = ReadiumNavigator;
+		};
+		B40000000000000000000004 /* ReadiumAdapterGCDWebServer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B30000000000000000000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */;
+			productName = ReadiumAdapterGCDWebServer;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A60000000000000000000001 /* Project object */;
+}

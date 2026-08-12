@@ -1,0 +1,91 @@
+# Android / Gradle
+.gradle/
+.kotlin/
+**/build/
+local.properties
+*.jks
+*.keystore
+android/key.properties
+android/keystore.properties
+*.hprof
+captures/
+.externalNativeBuild/
+.cxx/
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# iOS / Xcode
+DerivedData/
+**/DerivedData/
+.build/
+**/.build/
+*.xcuserstate
+**/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+.swiftpm/
+**/.swiftpm/
+Packages/
+Pods/
+**/Pods/
+
+# Rust / generated bindings
+**/target/
+shared/format-core/artifacts/
+shared/format-core/bindings/generated/
+android/app/src/main/jniLibs/
+ios/FormatCore/Generated/
+ios/ThirdParty/Build/
+*.aar
+*.framework
+*.xcframework
+*.apk
+*.aab
+*.ipa
+*.xcresult
+*.xcarchive
+SourcePackages/
+
+# Local data and transfer artifacts
+.local/
+.papria/
+*.part
+*.bookorbit-cache
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Secrets and environment
+.env
+.env.*
+!.env.example
+*.p12
+*.p8
+*.mobileprovision
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Test and coverage output
+coverage/
+reports/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots/
+**/fastlane/test_output/
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.log

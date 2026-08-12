@@ -1,0 +1,9 @@
+{
+  "name": "MobileVLCKit",
+  "version": "3.7.2",
+  "source": "https://download.videolan.org/pub/cocoapods/prod/MobileVLCKit-3.7.2-3e42ae47-79128878.tar.xz",
+  "sha256": "77b867667e5e62aa4062e71b7a4f76a0e2f505425916091c0eb0f94d9ad4af80",
+  "vendoredFramework": "MobileVLCKit.xcframework",
+  "license": "LGPL-2.1-or-later",
+  "licenseFile": "COPYING.txt"
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Deliberately no domain-config is present.  Network Security Config is
+  install-time/static policy, so it cannot safely express a host selected and
+  confirmed at runtime.  The application must therefore fail closed for HTTP
+  rather than grant cleartext access to every destination.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a reproducible problem
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the observed and expected behavior.
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Platform and device
+      placeholder: Android e-ink phone, Android color phone, or iPhone model
+    validations:
+      required: true
+  - type: input
+    id: server
+    attributes:
+      label: BookOrbit version
+      placeholder: v2.5.0 or local-only
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true

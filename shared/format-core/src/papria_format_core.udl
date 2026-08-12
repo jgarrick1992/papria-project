@@ -1,0 +1,167 @@
+/* Stable UniFFI boundary for the cross-platform format core.
+
+   This file is the source of truth for generated Kotlin/Swift bindings. It
+   intentionally exposes value types and pure operations only: no filesystem,
+   network, UI, or credentials are reachable through FFI. Comic archive
+   inspection receives a bounded, read-only byte-source callback; it never
+   extracts, writes, or opens a host path itself.
+   Rust implementation names are documented in README.md; generated bindings
+   use the names below exactly and do not add compatibility aliases. */
+
+namespace papria_format_core {};
+  enum SupportedFormat {
+    "Epub",
+    "Kepub",
+    "Mobi",
+    "Azw",
+    "Azw3",
+    "Fb2",
+    "Pdf",
+    "Cbz",
+    "Cbr",
+    "Cb7",
+    "M4b",
+    "M4a",
+    "Mp3",
+    "Opus",
+    "Ogg",
+    "Flac"
+  };
+
+  enum ReaderStrategy {
+    "ReadiumEpub",
+    "ConvertToEpub",
+    "ReadiumPdf",
+    "ComicArchive",
+    "Audio"
+  };
+
+  enum ArchiveKind {
+    "Zip",
+    "Rar",
+    "SevenZip",
+    "Unknown"
+  };
+
+  enum FilenameSafetyError {
+    "Empty",
+    "PathSeparator",
+    "Traversal",
+    "ControlCharacter",
+    "ReservedCharacter",
+    "ReservedDeviceName",
+    "TooLong"
+  };
+
+  enum ArchiveSafetyError {
+    "EmptyPath",
+    "AbsolutePath",
+    "PathTraversal",
+    "InvalidPathSeparator",
+    "ControlCharacter",
+    "PathTooLong",
+    "InvalidLimits",
+    "TooManyEntries",
+    "EntrySizeExceeded",
+    "TotalSizeExceeded",
+    "CompressionRatioExceeded",
+    "CompressedSizeUnavailable",
+    "DuplicatePath",
+    "InvalidArchive",
+    "UnsupportedArchive",
+    "EncryptedArchive",
+    "SourceReadFailed"
+  };
+
+  enum ArchiveSourceError {
+    "ReadFailed"
+  };
+
+  enum ConversionError {
+    "InputTooShort",
+    "InvalidContainer",
+    "UnsupportedCompression",
+    "Encrypted",
+    "InvalidUtf8",
+    "OutputTooLarge",
+    "UnsupportedFormat"
+  };
+
+  dictionary ArchiveLimits {
+    u64 max_entries;
+    u64 max_uncompressed_bytes;
+    u64 max_entry_uncompressed_bytes;
+    u64 max_compression_ratio;
+  };
+
+  dictionary ArchiveEntry {
+    string path;
+    u64 compressed_size;
+    u64 uncompressed_size;
+    /* False only when this logical member shares a packed stream with other
+       members. Direct metadata validation rejects such entries; the comic
+       archive inspector verifies their containing stream's trusted aggregate
+       packed/unpacked ratio before returning them. */
+    boolean compressed_size_known;
+  };
+
+  dictionary ArchiveInspection {
+    u64 entry_count;
+    u64 compressed_bytes;
+    u64 uncompressed_bytes;
+  };
+
+  dictionary ComicArchiveInspection {
+    ArchiveKind kind;
+    sequence<ArchiveEntry> entries;
+    u64 compressed_bytes;
+    u64 uncompressed_bytes;
+  };
+
+  /* The caller owns the file handle and must return exactly `length` bytes
+     from each in-range read. The core only asks for bounded slices and never
+     materializes the full archive in process memory. */
+  callback interface ArchiveByteSource {
+    u64 length();
+    [Throws=ArchiveSourceError]
+    sequence<u8> read_at(u64 offset, u32 length);
+  };
+
+namespace papria_format_core {
+  /* Filename/format functions are pure and bounded by the caller-provided
+     header length. `null` means the input is unknown or failed sniffing. */
+  SupportedFormat? format_from_filename(string filename);
+  SupportedFormat? detect_format(string filename, sequence<u8> header);
+  ReaderStrategy reader_strategy(SupportedFormat format);
+  ArchiveKind detect_archive_kind(sequence<u8> header);
+  ArchiveKind? archive_kind_from_extension(string extension);
+  ArchiveKind? archive_kind_from_filename(string filename);
+  ArchiveKind? archive_kind_from_format(SupportedFormat format);
+  string sanitize_filename(string filename);
+
+    /* SHA-256 output is always exactly 64 lower-case ASCII hex characters. */
+  string sha256_hex(sequence<u8> bytes);
+  string converter_cache_key(string source_sha256, string converter_version);
+
+  [Throws=ConversionError]
+  string convert_fb2_to_html(string source);
+  [Throws=ConversionError]
+  string convert_to_internal_html(SupportedFormat format, sequence<u8> input);
+  [Throws=ConversionError]
+  sequence<u8> convert_to_internal_epub(SupportedFormat format, sequence<u8> input);
+
+  ArchiveLimits default_archive_limits();
+  [Throws=FilenameSafetyError]
+  void validate_filename(string filename);
+  [Throws=ArchiveSafetyError]
+  void validate_archive_entry_path(string path);
+  [Throws=ArchiveSafetyError]
+  ArchiveInspection inspect_archive_entries(sequence<ArchiveEntry> entries,
+                                            ArchiveLimits limits);
+  [Throws=ArchiveSafetyError]
+  void validate_archive_entries(sequence<ArchiveEntry> entries,
+                                ArchiveLimits limits);
+  [Throws=ArchiveSafetyError]
+  ComicArchiveInspection inspect_comic_archive(ArchiveByteSource source,
+                                                ArchiveLimits limits);
+};

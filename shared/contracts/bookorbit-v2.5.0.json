@@ -1,0 +1,78 @@
+{
+  "title": "BookOrbit REST client contract",
+  "version": "v2.5.0",
+  "basePath": "/api/v1",
+  "authentication": {
+    "login": {
+      "method": "POST",
+      "path": "/auth/login",
+      "body": ["username", "password"]
+    },
+    "refresh": {
+      "method": "POST",
+      "path": "/auth/refresh",
+      "usesCookie": "refresh_token"
+    },
+    "me": {
+      "method": "GET",
+      "path": "/auth/me"
+    }
+  },
+  "appInfo": {
+    "method": "GET",
+    "path": "/app-info",
+    "requiredResponseFields": ["version"]
+  },
+  "library": {
+    "query": {
+      "method": "POST",
+      "path": "/books/query",
+      "body": ["sort", "pagination", "collapseSeries", "q"],
+      "response": ["items", "total", "page", "size"]
+    },
+    "detail": {
+      "method": "GET",
+      "path": "/books/:id"
+    },
+    "cover": {
+      "method": "GET",
+      "path": "/books/:id/cover",
+      "maxBytes": 16777216
+    },
+    "fileServe": {
+      "method": "GET",
+      "path": "/books/files/:fileId/serve",
+      "supportsRange": true
+    }
+  },
+  "progress": {
+    "fileGet": {
+      "method": "GET",
+      "path": "/books/files/:fileId/progress"
+    },
+    "fileSave": {
+      "method": "POST",
+      "path": "/books/files/:fileId/progress",
+      "body": [
+        "percentage",
+        "cfi",
+        "pageNumber",
+        "positionSeconds",
+        "koboLocationSource",
+        "koboLocationType",
+        "koboLocationValue",
+        "koboContentSourceProgressPercent",
+        "koreaderProgress"
+      ]
+    },
+    "audioGet": {
+      "method": "GET",
+      "path": "/books/:bookId/audio-progress"
+    },
+    "audioSave": {
+      "method": "PATCH",
+      "path": "/books/:bookId/audio-progress",
+      "body": ["percentage", "currentFileId", "positionSeconds"]
+    }
+  }
+}
