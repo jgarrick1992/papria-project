@@ -28,7 +28,7 @@ jobs:
       version: ${{ steps.version.outputs.version }}
       commit: ${{ steps.version.outputs.commit }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.release_tag }}
           fetch-depth: 0
@@ -69,14 +69,14 @@ jobs:
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.release_tag }}
-      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: temurin
           java-version: '21.0.7+6.0.LTS'
-      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+      - uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
       - name: Install pinned Android native build inputs
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018"
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
@@ -121,7 +121,7 @@ jobs:
           "$JAVA_HOME/bin/jarsigner" -keystore "$keystore" -storepass "$ANDROID_KEYSTORE_PASSWORD" -keypass "$ANDROID_KEY_PASSWORD" -signedjar "release/Papria-${{ needs.preflight.outputs.version }}-android.aab" "${aabs[0]}" "$ANDROID_KEY_ALIAS"
           "$JAVA_HOME/bin/jarsigner" -verify -strict -certs "release/Papria-${{ needs.preflight.outputs.version }}-android.aab" | tee reports/android-aab-signature.txt
       - name: Upload actual signed Android assets and reports
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: signed-android-${{ needs.preflight.outputs.version }}
           path: |
@@ -150,7 +150,7 @@ jobs:
       IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
       IOS_EXPORT_OPTIONS_PLIST_BASE64: ${{ secrets.IOS_EXPORT_OPTIONS_PLIST_BASE64 }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.release_tag }}
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
@@ -207,7 +207,7 @@ jobs:
           cp "$ipa" "release/Papria-${{ needs.preflight.outputs.version }}-ios.ipa"
           codesign -dvv "$RUNNER_TEMP/Papria.xcarchive/Products/Applications/Papria.app" > reports/ios-codesign.txt 2>&1
       - name: Upload actual signed iOS asset and reports
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: signed-ios-${{ needs.preflight.outputs.version }}
           path: |
@@ -226,7 +226,7 @@ jobs:
       attestations: write
       id-token: write
     steps:
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: signed-*-${{ needs.preflight.outputs.version }}
           path: incoming
@@ -248,7 +248,7 @@ jobs:
             printf '{"schemaVersion":1,"tag":"%s","commit":"%s","artifacts":"signed-by-external-production-credentials"}\n' "$RELEASE_TAG" "${{ needs.preflight.outputs.commit }}" > release-manifest.json
           )
       - name: Attest the actual signed release assets
-        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2 # v2.2.3
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
             release/Papria-${{ needs.preflight.outputs.version }}-android.apk
@@ -257,7 +257,7 @@ jobs:
             release/SHA256SUMS.txt
             release/release-manifest.json
       - name: Upload signed release package before publication
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: signed-release-${{ needs.preflight.outputs.version }}
           path: release/
