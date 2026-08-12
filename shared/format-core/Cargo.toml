@@ -10,10 +10,10 @@ crate-type = ["cdylib", "staticlib", "rlib"]
 
 [dependencies]
 sha2 = "0.10"
-uniffi = "0.28.3"
+uniffi = "0.32.0"
 
 [build-dependencies]
 cc = "1.1"
-uniffi = { version = "0.28.3", features = ["build"] }
+uniffi = { version = "0.32.0", features = ["build"] }
 
 [dev-dependencies]
