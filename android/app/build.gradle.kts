@@ -266,7 +266,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.7.2")
     implementation("androidx.room:room-ktx:2.7.2")
     if (roomProcessorEnabled) add("kapt", "androidx.room:room-compiler:2.7.2")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp:5.4.0")
     // Apache Commons Compress supplies bounded 7z/CB7 extraction. Junrar
     // decodes RAR4 compressed CBR members only after the local parser has
     // validated names, archive limits and non-encryption flags.
@@ -281,7 +281,7 @@ dependencies {
     implementation("net.java.dev.jna:jna:5.14.0@aar")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.4.0")
     androidTestImplementation("androidx.test:runner:1.6.2")
     androidTestImplementation("androidx.test:core:1.6.1")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
