@@ -2149,7 +2149,7 @@ impl<'a> SevenZipCursor<'a> {
         let mut value = 0_u64;
         for index in 0..8 {
             if first & mask == 0 {
-                return Ok(value | ((first & (mask - 1)) as u64) << (8 * index));
+                return Ok(value | (((first & (mask - 1)) as u64) << (8 * index)));
             }
             value |= (self.read_u8()? as u64) << (8 * index);
             mask >>= 1;
