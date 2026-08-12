@@ -1,0 +1,32 @@
+{
+  "title": "Papria progress envelope",
+  "version": "v1",
+  "rules": {
+    "localFirst": true,
+    "remoteSource": "bookorbit",
+    "conflict": "pull-before-push-and-verify",
+    "aliases": false
+  },
+  "bookProgressFields": [
+    "percentage",
+    "cfi",
+    "pageNumber",
+    "positionSeconds",
+    "updatedAt",
+    "dirty"
+  ],
+  "audioProgressFields": [
+    "percentage",
+    "currentFileId",
+    "positionSeconds",
+    "updatedAt",
+    "dirty"
+  ],
+  "precision": {
+    "epub": ["percentage", "cfi"],
+    "pdf": ["percentage", "pageNumber"],
+    "comic": ["percentage", "pageNumber"],
+    "audio": ["percentage", "currentFileId", "positionSeconds"],
+    "convertedText": ["percentage"]
+  }
+}

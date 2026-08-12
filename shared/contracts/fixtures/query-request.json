@@ -1,0 +1,6 @@
+{
+  "sort": [{"field": "updatedAt", "dir": "desc"}],
+  "pagination": {"page": 0, "size": 20},
+  "collapseSeries": false,
+  "q": "fixture"
+}

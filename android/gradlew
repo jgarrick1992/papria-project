@@ -1,0 +1,5 @@
+#!/bin/sh
+# Gradle wrapper bootstrap script. Standard Gradle wrapper JAR is checked in under gradle/wrapper.
+APP_HOME=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+JAVA_CMD="${JAVA_HOME:+$JAVA_HOME/bin/}java"
+exec "$JAVA_CMD" -classpath "$APP_HOME/gradle/wrapper/gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain "$@"

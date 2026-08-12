@@ -1,0 +1,275 @@
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+      source_ref:
+        description: Exact source ref checked by a caller such as a release workflow.
+        required: false
+        type: string
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-policy:
+    name: Workflow supply-chain policy
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Require immutable action references and pinned tool inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Local reusable workflows are versioned by the checked-out commit;
+          # only third-party actions need an immutable commit reference.
+          action_lines="$(grep -RHE '^[[:space:]]*(-[[:space:]]+)?uses:' .github/workflows | grep -Ev 'uses:[[:space:]]+\./' || true)"
+          test -n "$action_lines"
+          if printf '%s\n' "$action_lines" | grep -Ev '@[[:xdigit:]]{40}([[:space:]]|#|$)'; then
+            echo 'Every third-party action must be referenced by an exact 40-character commit SHA.' >&2
+            exit 1
+          fi
+          runner_prefix='runs-on:[[:space:]]*(ubuntu'
+          runner_suffix='-latest|macos-'
+          runner_suffix+="latest)"
+          if grep -REn "${runner_prefix}${runner_suffix}" .github/workflows; then
+            echo 'Use an explicit GitHub-hosted runner major image and record its observed toolchain.' >&2
+            exit 1
+          fi
+          mutable_toolchain='rust-toolchain@'
+          mutable_toolchain+='stable'
+          mutable_uniffi='--tag '
+          mutable_uniffi+='v0.28.3'
+          if grep -REn -e "$mutable_toolchain" -e "$mutable_uniffi" .github/workflows; then
+            echo 'Do not use mutable Rust or UniFFI installation selectors.' >&2
+            exit 1
+          fi
+          if grep -REn '^[^:]+:[0-9]+:[[:space:]]+cargo[[:space:]]+install[[:space:]]+cargo-ndk' .github/workflows \
+            | grep -Ev '^[^:]+:[0-9]+:[[:space:]]+cargo[[:space:]]+install[[:space:]]+cargo-ndk[[:space:]]+--version[[:space:]]+=3[.]5[.]4[[:space:]]+--locked([[:space:]]|$)'; then
+            echo 'cargo-ndk must be installed as exact version =3.5.4 with --locked.' >&2
+            exit 1
+          fi
+
+  contracts:
+    name: Contract checks
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.source_ref || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22.18.0'
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
+        with:
+          toolchain: 1.85.1
+      - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
+        with:
+          workspaces: shared/format-core
+      - name: Validate exact contracts
+        run: ./scripts/verify-contracts.sh
+      - name: Validate shared fixture manifest
+        run: ./scripts/verify-fixtures.sh
+      - name: Validate project structure
+        run: bash scripts/verify-structure.sh
+      - name: Validate repository policy
+        run: ./scripts/verify-repository.sh
+      - name: Check whitespace
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check "${{ github.event.pull_request.base.sha }}" HEAD
+          elif git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+            git diff --check HEAD^ HEAD
+          fi
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - uses: actions/dependency-review-action@595b5aeba73380359d98a5e087f648dbb0edce1b # v4.7.3
+        with:
+          fail-on-severity: high
+
+  format-core:
+    name: Rust format core
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
+        with:
+          toolchain: 1.85.1
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
+        with:
+          workspaces: shared/format-core
+      - name: Run Rust checks and save the log
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          {
+            rustc -Vv
+            cargo -V
+            cargo fmt --manifest-path shared/format-core/Cargo.toml -- --check
+            cargo test --locked --manifest-path shared/format-core/Cargo.toml
+            cargo clippy --locked --manifest-path shared/format-core/Cargo.toml --all-targets -- -D warnings
+          } 2>&1 | tee reports/rust-checks.log
+      - name: Upload Rust check report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: rust-check-report
+          path: reports/rust-checks.log
+          if-no-files-found: warn
+          retention-days: 30
+
+  android:
+    name: Android checks
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '21.0.7+6'
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+      - name: Install pinned Android SDK build inputs
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018"
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
+        with:
+          toolchain: 1.85.1
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - name: Install pinned Android format-core builders
+        run: |
+          cargo install cargo-ndk --version =3.5.4 --locked
+          cargo install --git https://github.com/mozilla/uniffi-rs.git --rev 0d38fc51ec057c271233b70db51b13ef403e360d --locked uniffi-bindgen-cli
+      - run: chmod +x android/gradlew
+      - name: Run Android unit tests, lint, and default-core package checks
+        shell: bash
+        env:
+          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          {
+            java -version
+            sdkmanager --version
+            ./android/gradlew --version
+            ./android/gradlew --no-daemon -p android testDebugUnitTest lintDebug :app:assembleDebug :app:verifyNativeCoreDebugPackage
+          } 2>&1 | tee reports/android-checks.log
+      - name: Upload Android test, lint, and toolchain reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: android-check-reports
+          path: |
+            reports/android-checks.log
+            android/app/build/reports/tests/
+            android/app/build/test-results/
+            android/app/build/reports/lint-results-*.html
+            android/app/build/reports/lint-results-*.xml
+          if-no-files-found: warn
+          retention-days: 30
+
+  ios:
+    name: iOS checks
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Fetch checksum-verified MobileVLCKit
+        run: bash ios/scripts/fetch_mobilevlckit.sh
+      - name: Build iOS app and tests
+        run: xcodebuild -project ios/Papria.xcodeproj -scheme Papria -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build-for-testing
+      - name: Run iOS tests and retain an xcresult bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          device_id="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ { print $2; exit }')"
+          test -n "$device_id"
+          xcodebuild -project ios/Papria.xcodeproj -scheme Papria -destination "id=$device_id" CODE_SIGNING_ALLOWED=NO -resultBundlePath "$RUNNER_TEMP/PapriaTests.xcresult" test
+      - name: Capture iOS toolchain details
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          {
+            sw_vers
+            xcodebuild -version
+            swift --version
+          } > reports/ios-toolchain.txt 2>&1
+      - name: Upload iOS test and toolchain reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ios-check-reports
+          path: |
+            ${{ runner.temp }}/PapriaTests.xcresult
+            reports/ios-toolchain.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+  native-core-ios:
+    name: Native format core (iOS package and link)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
+        with:
+          toolchain: 1.85.1
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim,x86_64-apple-ios
+      - name: Install immutable UniFFI generator source revision
+        run: cargo install --git https://github.com/mozilla/uniffi-rs.git --rev 0d38fc51ec057c271233b70db51b13ef403e360d --locked uniffi-bindgen-cli
+      - name: Package XCFramework
+        run: scripts/build-format-core.sh ios
+      - name: Compile iOS app with native core linked
+        run: bash ios/scripts/native_core_build.sh
+
+  native-core-android:
+    name: Native format core (Android ABIs)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '21.0.7+6'
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+      - name: Install pinned Android native build inputs
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018"
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
+        with:
+          toolchain: 1.85.1
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - name: Install pinned cargo-ndk and UniFFI generator
+        run: |
+          cargo install cargo-ndk --version =3.5.4 --locked
+          cargo install --git https://github.com/mozilla/uniffi-rs.git --rev 0d38fc51ec057c271233b70db51b13ef403e360d --locked uniffi-bindgen-cli
+      - name: Build default shared-core variants and verify APK contents
+        env:
+          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
+        run: ./android/gradlew --no-daemon -p android :app:testDebugUnitTest :app:assembleDebug :app:assembleRelease :app:verifyNativeCoreDebugPackage :app:verifyNativeCoreReleasePackage :app:verifyLibVlcReleasePackage

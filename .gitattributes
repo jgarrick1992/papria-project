@@ -1,0 +1,6 @@
+# Format fixtures are byte-exact test vectors. Their content must not be
+# line-ending-normalized or subjected to text whitespace checks.
+shared/format-core/fixtures/assets/** binary
+# Preserve the exact upstream libmobi export. Its historical trailing spaces
+# are part of the recorded source archive and must not fail repository checks.
+shared/format-core/vendor/libmobi/** -whitespace

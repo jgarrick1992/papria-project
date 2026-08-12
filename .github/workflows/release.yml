@@ -1,0 +1,271 @@
+name: Signed GitHub release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing vX.Y.Z tag that has passed Release candidate evidence
+        required: true
+        type: string
+      publish:
+        description: Create the GitHub release after signing, checksums, and attestations succeed
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signed-release-${{ inputs.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    name: Verify release tag and version
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      commit: ${{ steps.version.outputs.commit }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.release_tag }}
+          fetch-depth: 0
+      - id: version
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="$RELEASE_TAG"
+          [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'release_tag must be vX.Y.Z' >&2; exit 1; }
+          git rev-parse --verify "refs/tags/$tag" >/dev/null
+          version="$(sed -nE 's/^The current project version is \*\*([0-9]+\.[0-9]+\.[0-9]+)\*\*\.$/\1/p' VERSION.md)"
+          test -n "$version"
+          test "$tag" = "v$version"
+          grep -F "versionName = \"$version\"" android/app/build.gradle.kts
+          grep -F "MARKETING_VERSION = $version;" ios/Papria.xcodeproj/project.pbxproj
+          grep -F "version = \"$version\"" shared/format-core/Cargo.toml
+          printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
+          printf 'commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  source-gates:
+    name: Re-run strict source gates for the release tag
+    needs: preflight
+    uses: ./.github/workflows/ci.yml
+    with:
+      source_ref: ${{ inputs.release_tag }}
+    secrets: inherit
+
+  android-signed:
+    name: Build and verify Android signed artifacts
+    needs: [preflight, source-gates]
+    runs-on: ubuntu-24.04
+    environment: production
+    env:
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.release_tag }}
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '21.0.7+6'
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+      - name: Install pinned Android native build inputs
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018"
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
+        with:
+          toolchain: 1.85.1
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - name: Install pinned native build tools
+        run: |
+          cargo install cargo-ndk --version =3.5.4 --locked
+          cargo install --git https://github.com/mozilla/uniffi-rs.git --rev 0d38fc51ec057c271233b70db51b13ef403e360d --locked uniffi-bindgen-cli
+      - name: Require real Android signing credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$ANDROID_KEYSTORE_BASE64" || { echo 'ANDROID_KEYSTORE_BASE64 is required.' >&2; exit 1; }
+          test -n "$ANDROID_KEY_ALIAS" || { echo 'ANDROID_KEY_ALIAS is required.' >&2; exit 1; }
+          test -n "$ANDROID_KEYSTORE_PASSWORD" || { echo 'ANDROID_KEYSTORE_PASSWORD is required.' >&2; exit 1; }
+          test -n "$ANDROID_KEY_PASSWORD" || { echo 'ANDROID_KEY_PASSWORD is required.' >&2; exit 1; }
+      - name: Build and sign Android APK/AAB
+        env:
+          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p release reports
+          keystore="$RUNNER_TEMP/papria-release.keystore"
+          trap 'rm -f "$keystore"' EXIT
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$keystore"
+          set -o pipefail
+          {
+            ./android/gradlew --no-daemon -p android :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleRelease :app:bundleRelease :app:verifyNativeCoreDebugPackage :app:verifyNativeCoreReleasePackage :app:verifyLibVlcReleasePackage
+          } 2>&1 | tee reports/android-signed-release.log
+          mapfile -t apks < <(find android/app/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | sort)
+          mapfile -t aabs < <(find android/app/build/outputs/bundle/release -maxdepth 1 -type f -name '*.aab' | sort)
+          test "${#apks[@]}" -eq 1
+          test "${#aabs[@]}" -eq 1
+          apksigner="$ANDROID_HOME/build-tools/36.0.0/apksigner"
+          test -x "$apksigner"
+          "$apksigner" sign --ks "$keystore" --ks-key-alias "$ANDROID_KEY_ALIAS" --ks-pass "pass:$ANDROID_KEYSTORE_PASSWORD" --key-pass "pass:$ANDROID_KEY_PASSWORD" --out "release/Papria-${{ needs.preflight.outputs.version }}-android.apk" "${apks[0]}"
+          "$apksigner" verify --verbose --print-certs "release/Papria-${{ needs.preflight.outputs.version }}-android.apk" | tee reports/android-apk-signature.txt
+          "$JAVA_HOME/bin/jarsigner" -keystore "$keystore" -storepass "$ANDROID_KEYSTORE_PASSWORD" -keypass "$ANDROID_KEY_PASSWORD" -signedjar "release/Papria-${{ needs.preflight.outputs.version }}-android.aab" "${aabs[0]}" "$ANDROID_KEY_ALIAS"
+          "$JAVA_HOME/bin/jarsigner" -verify -strict -certs "release/Papria-${{ needs.preflight.outputs.version }}-android.aab" | tee reports/android-aab-signature.txt
+      - name: Upload actual signed Android assets and reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: signed-android-${{ needs.preflight.outputs.version }}
+          path: |
+            release/
+            reports/
+            android/app/build/reports/tests/
+            android/app/build/test-results/
+            android/app/build/reports/lint-results-*.html
+            android/app/build/reports/lint-results-*.xml
+          if-no-files-found: error
+          retention-days: 30
+
+  ios-signed:
+    name: Build and export an iOS signed IPA
+    needs: [preflight, source-gates]
+    runs-on: macos-14
+    environment: production
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+      IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+      IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+      IOS_PROVISIONING_PROFILE_NAME: ${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}
+      IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+      IOS_EXPORT_OPTIONS_PLIST_BASE64: ${{ secrets.IOS_EXPORT_OPTIONS_PLIST_BASE64 }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.release_tag }}
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # 2026-08-11 action commit
+        with:
+          toolchain: 1.85.1
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim,x86_64-apple-ios
+      - name: Install immutable UniFFI generator source revision
+        run: cargo install --git https://github.com/mozilla/uniffi-rs.git --rev 0d38fc51ec057c271233b70db51b13ef403e360d --locked uniffi-bindgen-cli
+      - name: Require real iOS signing credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$APPLE_TEAM_ID" || { echo 'APPLE_TEAM_ID is required.' >&2; exit 1; }
+          test -n "$IOS_CERTIFICATE_BASE64" || { echo 'IOS_CERTIFICATE_BASE64 is required.' >&2; exit 1; }
+          test -n "$IOS_PROVISIONING_PROFILE_BASE64" || { echo 'IOS_PROVISIONING_PROFILE_BASE64 is required.' >&2; exit 1; }
+          test -n "$IOS_PROVISIONING_PROFILE_NAME" || { echo 'IOS_PROVISIONING_PROFILE_NAME is required.' >&2; exit 1; }
+          test -n "$IOS_KEYCHAIN_PASSWORD" || { echo 'IOS_KEYCHAIN_PASSWORD is required.' >&2; exit 1; }
+          test -n "$IOS_EXPORT_OPTIONS_PLIST_BASE64" || { echo 'IOS_EXPORT_OPTIONS_PLIST_BASE64 is required.' >&2; exit 1; }
+      - name: Import credentials, archive, and export the signed IPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p release reports "$HOME/Library/MobileDevice/Provisioning Profiles"
+          keychain="$RUNNER_TEMP/papria-signing.keychain-db"
+          certificate="$RUNNER_TEMP/papria-distribution.p12"
+          profile="$HOME/Library/MobileDevice/Provisioning Profiles/Papria.mobileprovision"
+          export_options="$RUNNER_TEMP/ExportOptions.plist"
+          trap 'security delete-keychain "$keychain" >/dev/null 2>&1 || true; rm -f "$certificate" "$profile" "$export_options"' EXIT
+          printf '%s' "$IOS_CERTIFICATE_BASE64" | base64 -D > "$certificate"
+          printf '%s' "$IOS_PROVISIONING_PROFILE_BASE64" | base64 -D > "$profile"
+          printf '%s' "$IOS_EXPORT_OPTIONS_PLIST_BASE64" | base64 -D > "$export_options"
+          security create-keychain -p "$IOS_KEYCHAIN_PASSWORD" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$IOS_KEYCHAIN_PASSWORD" "$keychain"
+          security import "$certificate" -P "$IOS_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$keychain"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$IOS_KEYCHAIN_PASSWORD" "$keychain"
+          security list-keychain -d user -s "$keychain"
+          set -o pipefail
+          {
+            scripts/build-format-core.sh ios
+            bash ios/scripts/fetch_mobilevlckit.sh
+            sw_vers
+            xcodebuild -version
+            swift --version
+            rustc -Vv
+            cargo -V
+            xcodebuild archive -project ios/Papria.xcodeproj -scheme Papria -configuration Release -sdk iphoneos -archivePath "$RUNNER_TEMP/Papria.xcarchive" DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="$IOS_PROVISIONING_PROFILE_NAME"
+            xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Papria.xcarchive" -exportPath "$RUNNER_TEMP/Papria-export" -exportOptionsPlist "$export_options"
+          } 2>&1 | tee reports/ios-signed-release.log
+          ipa="$(find "$RUNNER_TEMP/Papria-export" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$ipa" -a -f "$ipa"
+          test "$(find "$RUNNER_TEMP/Papria-export" -maxdepth 1 -type f -name '*.ipa' | wc -l | tr -d ' ')" -eq 1
+          cp "$ipa" "release/Papria-${{ needs.preflight.outputs.version }}-ios.ipa"
+          codesign -dvv "$RUNNER_TEMP/Papria.xcarchive/Products/Applications/Papria.app" > reports/ios-codesign.txt 2>&1
+      - name: Upload actual signed iOS asset and reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: signed-ios-${{ needs.preflight.outputs.version }}
+          path: |
+            release/
+            reports/
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Checksum, attest, and optionally publish GitHub release
+    needs: [preflight, android-signed, ios-signed]
+    runs-on: ubuntu-24.04
+    environment: production
+    permissions:
+      contents: write
+      attestations: write
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: signed-*-${{ needs.preflight.outputs.version }}
+          path: incoming
+          merge-multiple: true
+      - name: Assemble checksums and release manifest
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          find incoming -type f \( -name '*.apk' -o -name '*.aab' -o -name '*.ipa' \) -exec cp {} release/ \;
+          test -f "release/Papria-${{ needs.preflight.outputs.version }}-android.apk"
+          test -f "release/Papria-${{ needs.preflight.outputs.version }}-android.aab"
+          test -f "release/Papria-${{ needs.preflight.outputs.version }}-ios.ipa"
+          (
+            cd release
+            shasum -a 256 Papria-${{ needs.preflight.outputs.version }}-android.apk Papria-${{ needs.preflight.outputs.version }}-android.aab Papria-${{ needs.preflight.outputs.version }}-ios.ipa > SHA256SUMS.txt
+            printf '{"schemaVersion":1,"tag":"%s","commit":"%s","artifacts":"signed-by-external-production-credentials"}\n' "$RELEASE_TAG" "${{ needs.preflight.outputs.commit }}" > release-manifest.json
+          )
+      - name: Attest the actual signed release assets
+        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2 # v2.2.3
+        with:
+          subject-path: |
+            release/Papria-${{ needs.preflight.outputs.version }}-android.apk
+            release/Papria-${{ needs.preflight.outputs.version }}-android.aab
+            release/Papria-${{ needs.preflight.outputs.version }}-ios.ipa
+            release/SHA256SUMS.txt
+            release/release-manifest.json
+      - name: Upload signed release package before publication
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: signed-release-${{ needs.preflight.outputs.version }}
+          path: release/
+          retention-days: 90
+      - name: Create GitHub release only when explicitly requested
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" --verify-tag --title "Papria ${{ needs.preflight.outputs.version }}" --generate-notes release/*
