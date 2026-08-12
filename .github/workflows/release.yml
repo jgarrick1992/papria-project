@@ -75,7 +75,7 @@ jobs:
       - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
           distribution: temurin
-          java-version: '21.0.7+6'
+          java-version: '21.0.7+6.0.LTS'
       - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
       - name: Install pinned Android native build inputs
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018"
@@ -137,7 +137,9 @@ jobs:
   ios-signed:
     name: Build and export an iOS signed IPA
     needs: [preflight, source-gates]
-    runs-on: macos-14
+    # macos-15 currently supplies Xcode 16 / Swift 6, matching the locked
+    # SwiftPM graph. The runner label is intentionally explicit.
+    runs-on: macos-15
     environment: production
     env:
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

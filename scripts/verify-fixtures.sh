@@ -119,7 +119,9 @@ console.log(`fixture files: ok (${formats.length} formats × normal/malformed/la
 NODE
 
 if [[ "${PAPRIA_SKIP_FIXTURE_DRIVER:-0}" != "1" ]]; then
-  CARGO_TARGET_DIR="$DRIVER_TARGET" cargo run --offline --locked --manifest-path "$FIXTURE_DIR/driver/Cargo.toml" -- "$GENERATED"
+  # The CI cache can be cold on its first run, so the locked fixture driver
+  # must be allowed to fetch its declared dependencies before it executes.
+  CARGO_TARGET_DIR="$DRIVER_TARGET" cargo run --locked --manifest-path "$FIXTURE_DIR/driver/Cargo.toml" -- "$GENERATED"
 fi
 
 echo "fixtures: ok (tracked assets, deterministic regeneration, magic/size/corruption checks, Rust entry driver)"

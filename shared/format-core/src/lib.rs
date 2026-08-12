@@ -2655,7 +2655,9 @@ fn parse_7z_utf16_names(
     raw: &[u8],
     expected_count: usize,
 ) -> Result<Vec<String>, ArchiveSafetyError> {
-    if !raw.len().is_multiple_of(2) {
+    // Keep the format core compatible with the repository's pinned Rust 1.85
+    // toolchain. `usize::is_multiple_of` is not stable on that compiler.
+    if raw.len() % 2 != 0 {
         return Err(ArchiveSafetyError::InvalidArchive);
     }
     let mut names = Vec::with_capacity(expected_count);
