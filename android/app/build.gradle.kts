@@ -16,7 +16,7 @@ val nativeFormatCoreArtifacts = rootProject.file("../shared/format-core/artifact
 val nativeFormatCoreBinding = rootProject.file(
     "../shared/format-core/bindings/generated/uniffi/papria_format_core/papria_format_core.kt",
 )
-val readiumVersion = "3.1.2"
+val readiumVersion = "3.4.0"
 
 android {
     namespace = "com.papria.reader"
@@ -196,7 +196,7 @@ val verifyLibVlcReleasePackage by tasks.registering {
 
     doLast {
         val libVlcArtifact = configurations.getByName("releaseRuntimeClasspath").files.singleOrNull { file ->
-            file.name == "libvlc-all-3.6.5.aar"
+            file.name == "libvlc-all-3.7.6.aar"
         } ?: throw GradleException("Release runtime classpath is missing LibVLC 3.6.5.")
         val messageDigest = MessageDigest.getInstance("SHA-256")
         val digest = libVlcArtifact.inputStream().use { input ->
@@ -239,7 +239,7 @@ dependencies {
     // Readium 3.1.2 uses java.time and other APIs supplied through the
     // Android core-library desugaring contract on API 23 devices.
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
-    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.core:core-ktx:1.19.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("androidx.activity:activity-compose:1.10.1")
     implementation(platform("androidx.compose:compose-bom:2025.02.00"))
@@ -258,32 +258,32 @@ dependencies {
     implementation("org.readium.kotlin-toolkit:readium-adapter-pdfium:$readiumVersion")
     // Media3 owns the ExoPlayer queue, MediaSession notification, audio focus,
     // media buttons and lock-screen/Android Auto transport controls.
-    implementation("androidx.media3:media3-exoplayer:1.5.1")
-    implementation("androidx.media3:media3-session:1.5.1")
+    implementation("androidx.media3:media3-exoplayer:1.11.1")
+    implementation("androidx.media3:media3-session:1.11.1")
     // Secondary decoder for Media3 renderer/container failures. The checksum
     // and APK contents are verified by verifyLibVlcReleasePackage.
-    implementation("org.videolan.android:libvlc-all:3.6.5")
-    implementation("androidx.room:room-runtime:2.7.2")
-    implementation("androidx.room:room-ktx:2.7.2")
-    if (roomProcessorEnabled) add("kapt", "androidx.room:room-compiler:2.7.2")
+    implementation("org.videolan.android:libvlc-all:3.7.6")
+    implementation("androidx.room:room-runtime:2.8.5")
+    implementation("androidx.room:room-ktx:2.8.5")
+    if (roomProcessorEnabled) add("kapt", "androidx.room:room-compiler:2.8.5")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // Apache Commons Compress supplies bounded 7z/CB7 extraction. Junrar
     // decodes RAR4 compressed CBR members only after the local parser has
     // validated names, archive limits and non-encryption flags.
-    implementation("org.apache.commons:commons-compress:1.21")
-    implementation("org.tukaani:xz:1.9")
+    implementation("org.apache.commons:commons-compress:1.28.0")
+    implementation("org.tukaani:xz:1.12")
     implementation("com.github.junrar:junrar:7.5.5")
     // Junrar uses SLF4J at runtime. Keep an Android binding in the release
     // graph so R8 does not leave StaticLoggerBinder unresolved.
     implementation("org.slf4j:slf4j-android:1.7.36")
     implementation("androidx.work:work-runtime-ktx:2.10.1")
-    implementation("com.google.zxing:core:3.5.3")
-    implementation("net.java.dev.jna:jna:5.14.0@aar")
+    implementation("com.google.zxing:core:3.5.4")
+    implementation("net.java.dev.jna:jna:5.19.1@aar")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
-    androidTestImplementation("androidx.test:runner:1.6.2")
-    androidTestImplementation("androidx.test:core:1.6.1")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test:runner:1.7.0")
+    androidTestImplementation("androidx.test:core:1.7.0")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
